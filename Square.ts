@@ -25,7 +25,14 @@ class Square {
     }
 
     setValue(value: number) {
-        this.value = value;
+        if (this.value == null) {
+            this.value = value;
+            this.possibleValues = new Set([value]);
+        }
+    }
+
+    hasValue() {
+        return this.value != null;
     }
 
     addCallback(callback: SquareCallback) {
@@ -34,6 +41,7 @@ class Square {
 
     runCallbacks() {
         this.callbackQueue.forEach((callback: SquareCallback) => callback(this));
+        this.callbackQueue = [];
     }
 
     checkValue() {

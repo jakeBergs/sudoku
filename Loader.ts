@@ -15,8 +15,7 @@ export const loadByRow = (board: number[][], rows: grouping): void => {
             const square = rows[i][j - 1];
             const val = board[i - 1][j - 1];
             if (val !== 0) {
-                square.value = val;
-                square.possibleValues = new Set([]);
+                square.setValue(val);
             }
         }
     }
