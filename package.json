@@ -1,5 +1,25 @@
 {
+  "name": "sudoku",
+  "version": "1.0.0",
+  "scripts": {
+    "build": "tsc && webpack --config webpack.config.js",
+    "start": "ts-node src/backend/Solver.ts",
+    "start:frontend": "webpack serve --config webpack.config.js"
+  },
   "devDependencies": {
-    "@types/node": "^22.10.2"
+    "@types/node": "^22.10.2",
+    "@types/react": "^17.0.39",
+    "@types/react-dom": "^17.0.11",
+    "html-webpack-plugin": "^5.6.3",
+    "ts-loader": "^9.0.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.7.3",
+    "webpack": "^5.88.2",
+    "webpack-cli": "^5.1.4",
+    "webpack-dev-server": "^4.15.1"
+  },
+  "dependencies": {
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2"
   }
 }

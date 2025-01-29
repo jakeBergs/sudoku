@@ -62,16 +62,28 @@ const str_board_hard_142 =
     '0 0 9 0 0 5 0 7 4\n';
 
 
-// const str_board =
-//     '0 6 3 4 0 0 8 2 7\n' +
-//     '0 4 0 0 2 8 3 0 0\n' +
-//     '8 9 0 0 0 3 0 0 0\n' +
-//     '4 0 7 8 0 0 0 0 6\n' +
-//     '1 3 9 6 0 0 0 0 0\n' +
-//     '0 0 0 1 0 0 9 5 4\n' +
-//     '6 0 8 0 7 0 0 9 0\n' +
-//     '9 0 0 0 0 4 6 1 3\n' +
-//     '0 0 4 0 5 6 0 7 0\n';
+const str_board_0 =
+    '0 6 3 4 0 0 8 2 7\n' +
+    '0 4 0 0 2 8 3 0 0\n' +
+    '8 9 0 0 0 3 0 0 0\n' +
+    '4 0 7 8 0 0 0 0 6\n' +
+    '1 3 9 6 0 0 0 0 0\n' +
+    '0 0 0 1 0 0 9 5 4\n' +
+    '6 0 8 0 7 0 0 9 0\n' +
+    '9 0 0 0 0 4 6 1 3\n' +
+    '0 0 4 0 5 6 0 7 0\n';
+
+
+const str_board_1 =
+    '0 0 0 0 0 1 0 6 9\n' +
+    '8 3 6 0 0 0 0 5 1\n' +
+    '0 0 0 7 0 0 0 0 0\n' +
+    '0 0 2 0 8 0 0 0 3\n' +
+    '4 9 0 0 0 0 0 0 5\n' +
+    '1 0 0 0 9 0 0 0 0\n' +
+    '0 8 0 0 5 4 2 7 0\n' +
+    '0 0 5 2 0 0 0 3 0\n' +
+    '0 0 0 0 0 0 0 0 0\n';
 
 // chat gpt board, unsolvable
 // const str_board =
@@ -85,7 +97,7 @@ const str_board_hard_142 =
 //     "0 0 0 0 0 4 0 0 8\n" +
 //     "9 2 0 0 3 0 0 6 0\n";
 
-let arr_board = strToBoard(str_board_hard_142);
+let arr_board = strToBoard(str_board_1);
 loadByRow(arr_board, board.rows);
 
 // console.log(rows[2][1])
@@ -129,6 +141,7 @@ type ValuePositions = {
     [key: number]: number[];
 };
 
+// this does checks based on value positions in a grouping
 const checkForLastRemainingValue = (grouping: grouping): boolean => {
     let keys: string[] = Object.keys(grouping);
     let changeOccurred = false;
@@ -152,17 +165,38 @@ const checkForLastRemainingValue = (grouping: grouping): boolean => {
                 valuePositions[value].push(index);
             })
         })
-        Object.keys(valuePositions).forEach((key_str) => {
-            const key2 = Number(key_str);
-            const cnt = valuePositions[key2].length;
-            const index = valuePositions[key2][0];
+        Object.keys(valuePositions).forEach((val_str) => {
+            const val = Number(val_str);
+            const cnt = valuePositions[val].length;
+            const index = valuePositions[val][0];
             section[index].hasValue();
             if (cnt === 0) {
                 throw new Error('No possible values for a square');
             } else if (cnt === 1 && !section[index].hasValue()) {
                 // console.log('found a value by elimination');
                 changeOccurred = true;
-                section[index].setValue(key2);
+                section[index].setValue(val);
+            } else if (cnt === 2) {
+                for (let vpi = val; vpi <= 9; vpi++) {
+                    if (valuePositions[vpi].length === 2) {
+                        const indecies1 = valuePositions[val];
+                        const indecies2 = valuePositions[vpi];
+                        if (indecies1[0] === indecies2[0] && indecies1[1] === indecies2[1]) {
+                            // eliminate these two values (val and vpi) from the rest of the section exept for the two indecies
+                            section.forEach((square: Square, ind: number) => {
+                                if (indecies1.indexOf(ind) === -1 && (square.possibleValues.has(val) || square.possibleValues.has(vpi))) {
+                                    console.log('eliminating values');
+                                    changeOccurred = true;
+                                    square.addCallback((sq: Square) => {
+                                        sq.possibleValues.delete(val);
+                                        sq.possibleValues.delete(vpi);
+                                    });
+                                }
+                            })
+
+                        }
+                    }
+                }
             }
         })
     })
@@ -204,12 +238,12 @@ let curSectionType = SectionType.ROW;
 try {
     while (hasChange) {
         hasChange = false;
-        // for (let gc = 0; gc < 3; gc++) {
-        //     const curGrouping = getGrouping(curSectionType);
-        //     console.log(curSectionType);
-        //     hasChange = checkForLastRemainingValue(curGrouping) || hasChange;
-        //     curSectionType = getNextSectionType(curSectionType);
-        // }
+        for (let gc = 0; gc < 3; gc++) {
+            const curGrouping = getGrouping(curSectionType);
+            console.log(curSectionType);
+            hasChange = checkForLastRemainingValue(curGrouping) || hasChange;
+            curSectionType = getNextSectionType(curSectionType);
+        }
         hasChange = iterateOverGrouping(board.rows) || hasChange;
         hasChange = board.runCallbacks() || hasChange;
         console.log(hasChange)
@@ -220,4 +254,5 @@ try {
     throw e;
 }
 
+// console.log(board.rows[8][6].possibleValues);
 board.printBoard();
