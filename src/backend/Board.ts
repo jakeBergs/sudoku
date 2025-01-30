@@ -1,5 +1,5 @@
-import { grouping, buildGrouping } from './Solver'
 import Square from './Square';
+import { grouping } from '../shared/types'
 
 class Board {
     rows: grouping;
@@ -7,9 +7,9 @@ class Board {
     boxes: grouping;
 
     constructor() {
-        this.rows = buildGrouping();
-        this.columns = buildGrouping();
-        this.boxes = buildGrouping();
+        this.rows = this.buildGrouping();
+        this.columns = this.buildGrouping();
+        this.boxes = this.buildGrouping();
 
         this.initializeBoard();
     }
@@ -27,6 +27,18 @@ class Board {
             }
         }
     }
+
+    private buildGrouping = (): grouping => ({
+        1: [],
+        2: [],
+        3: [],
+        4: [],
+        5: [],
+        6: [],
+        7: [],
+        8: [],
+        9: []
+    })
 
     getAdjacentSquares = (row: number, column: number, box: number): Square[] => {
         return this.rows[row].concat(this.columns[column]).concat(this.boxes[box])

@@ -3,8 +3,9 @@
   "version": "1.0.0",
   "scripts": {
     "build": "tsc && webpack --config webpack.config.js",
-    "start": "ts-node src/backend/Solver.ts",
-    "start:frontend": "webpack serve --config webpack.config.js",
+    "build:backend": "tsc",
+    "start": "webpack serve --config webpack.config.js",
+    "start:solvePuzzle": "ts-node src/scripts/solvePuzzle.ts",
     "test": "jest"
   },
   "devDependencies": {
