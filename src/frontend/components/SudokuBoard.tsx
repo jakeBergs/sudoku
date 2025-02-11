@@ -16,7 +16,6 @@ const SudokuBoard: React.FC = () => {
             const newBoard = board.map((r, i) =>
                 r.map((c, j) => (i === row && j === col ? value : c))
             );
-            console.log(newBoard);
             setBoard(newBoard);
         }
     };
@@ -29,7 +28,6 @@ const SudokuBoard: React.FC = () => {
         loader.loadByRow(solver.board.rows);
         solver.solveUntilFail();
         solver.board.alertBoard();
-        console.log(solver.board.printBoard())
     };
 
     return (
