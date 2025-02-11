@@ -3,8 +3,17 @@ import { grouping } from '../shared/types';
 
 class Loader {
     simpleBoard: number[][];
-    constructor(strBoard: string) {
+
+    constructor() {
+        this.simpleBoard = Array(9).fill(null).map(() => Array(9).fill(0));
+    }
+
+    loadFromString = (strBoard: string): void => {
         this.simpleBoard = this.strToBoard(strBoard);
+    }
+
+    loadFromMatrix = (simpleBoard: number[][]): void => {
+        this.simpleBoard = simpleBoard;
     }
 
     strToBoard = (strBoard: string): number[][] => {

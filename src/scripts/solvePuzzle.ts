@@ -48,7 +48,8 @@ const str_board_1 =
     '0 0 0 0 0 0 0 0 0\n';
 
 const solver = new Solver();
-const loader = new Loader(str_board);
+const loader = new Loader();
+loader.loadFromString(str_board_1);
 loader.loadByRow(solver.board.rows);
 
 solver.solveUntilFail();
