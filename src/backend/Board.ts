@@ -44,7 +44,7 @@ class Board {
         return this.rows[row].concat(this.columns[column]).concat(this.boxes[box])
     }
 
-    printBoard = () => {
+    private boardToStr = (): string => {
         let keys = Object.keys(this.rows);
         let boardStr = '';
         keys.forEach((key) => {
@@ -59,7 +59,17 @@ class Board {
             })
             boardStr += rowStr + '\n';
         })
+        return boardStr;
+    }
+
+    printBoard = () => {
+        let boardStr = this.boardToStr();
         console.log(boardStr);
+    }
+
+    alertBoard = () => {
+        let boardStr = this.boardToStr();
+        alert(boardStr);
     }
 
     iterateOverAllSquares = (callback: (square: Square) => void) => {
